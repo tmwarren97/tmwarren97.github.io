@@ -101,18 +101,34 @@
     </style>
 
     <script>
-        var pool1 = [
-            /* NFC - SF - AWAY 0 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 1 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 2 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 3 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 4 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 5 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 6 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 7 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 8 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
-            /* NFC - SF - AWAY 9 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary']
-        ];
+        // [row][column]
+        var pool1 = new Array(10).fill("").map(() => new Array(10).fill(""));
+        var pool2 = new Array(10).fill("").map(() => new Array(10).fill(""));
+
+        function addRowToPool1(rowIndex, colArray) {
+            pool1[rowIndex][0] = colArray[0];
+            pool1[rowIndex][6] = colArray[1];
+            pool1[rowIndex][3] = colArray[2];
+            pool1[rowIndex][2] = colArray[3];
+            pool1[rowIndex][4] = colArray[4];
+            pool1[rowIndex][1] = colArray[5];
+            pool1[rowIndex][9] = colArray[6];
+            pool1[rowIndex][8] = colArray[7];
+            pool1[rowIndex][5] = colArray[8];
+            pool1[rowIndex][7] = colArray[9];
+        }
+
+        addRowToPool1(8, ["Juan BMS",     "Rob Hakes", "Fiona",       "Allen Lites", "Benjamin",    "Ryan Gordan",          "Mike S",               "Louie Lites",      "Mary W.",      "Matt Furey"]);
+        addRowToPool1(6, ["Catherine F.", "Haylie W.", "L.K.",        "Bill BMS",    "David M",     "Joe H.",               "Ryan Gordan (mom)",    "Ryan Gordan",      "Valerie R.",   "Mike H."]);
+        addRowToPool1(7, ["Venssa",       "Scotty",    "Louie Rojo",  "L.K.",        "Ryan G.",     "Cooy",                 "Allen Lites",          "Linda BMS",        "Liz",          "Kelsie F."]);
+        addRowToPool1(3, ["Fiona",        "Bridget",   "D Valentin",  "Louie Rojo",  "L.K.",        "Ryan Gordan (Dad)",    "Bill BMS",             "Nora",             "Latiff",       "Emily Gove"]);
+        addRowToPool1(9, ["Mike & Mary",  "Linda BMS", "Steve G.",    "Alex M.",     "Louie Rojo",  "L.K.",                 "Denise L.",            "Regina",           "Mike Dashey",  "Eddie M."]);
+        addRowToPool1(5, ["Sean Austin",  "Mike H.",   "Joe H.",      "Joe H.",      "Juan F. BMS", "Louie Rojo",           "L.K",                  "Aidan W.",         "Alex M.",      "Jack Price"]);
+        addRowToPool1(0, ["Louie Lites",  "Mike D.",   "Scotty",      "Nora",        "Tim W.",      "Joe H.",               "Louie Rojo",           "Anthony J.",       "Jack Price",   "Mike & Mary"]);
+        addRowToPool1(1, ["Phil & Maria", "Denise L.", "Mike H.",     "Regina",      "Jody",        "Rob Haker",            "Patricia F.",          "Jack Price",       "Andres T.",    "Juan F. "]);
+        addRowToPool1(2, ["Mike H.",      "Sev & J.",  "Nick Fallon", "Jose Jr.",    "Emily Grove", "Steve G.",             "Jack Price",           "Susan Brandli",    "Jorge M.",     "Daniel M."]);
+        addRowToPool1(4, ["Matt Furey",   "Latiff",    "Chris W.",    "Anthony J.",  "David M.",    "Jack Price",           "Mike H",               "Jose Jr.",         "Steve G.",     "Louie Lites"]);
+
     </script>
 
     <script>
@@ -122,6 +138,7 @@
             console.log(myJson)
             var homeTeam = myJson["2020020200"].home;
             var awayTeam = myJson["2020020200"].away;
+/*
             homeTeam.score["1"] = 6;
             awayTeam.score["1"] = 0;
             homeTeam.score["2"] = 3;
@@ -130,9 +147,46 @@
             awayTeam.score["3"] = 10;
             homeTeam.score["4"] = 5;
             awayTeam.score["4"] = 2;
+*/
             var homeTeamScores = renderTeam("homeTeam", homeTeam);
             var awayTeamScores = renderTeam("awayTeam", awayTeam);
             renderTable(homeTeam, homeTeamScores, awayTeam, awayTeamScores);
+            renderWhatIfs(pool1, homeTeam.abbr, homeTeamScores.endQ4Score, awayTeam.abbr, awayTeamScores.endQ4Score, 1);
+        }
+
+        function renderWhatIfs(pool, homeTeamName, homeTeamEndQ4Score, awayTeamName, awayTeamEndQ4Score, poolId) {
+            var wih = `<table style='width: 100%'>
+            <tr><th>Pool ${poolId}</th><th>+1</th><th>+2</th><th>+3</th><th>+6</th><th>+7</th><th>+8</th></tr>
+            ${renderWhatIfAwayTeamRow(pool, awayTeamName, homeTeamEndQ4Score, awayTeamEndQ4Score)}
+            ${renderWhatIfHomeTeamRow(pool, homeTeamName, homeTeamEndQ4Score, awayTeamEndQ4Score)}
+            </table>`;
+            upd("whatIfTable", wih);
+        }
+
+        function renderWhatIfHomeTeamRow(pool, teamName, homeTeamEndQ4Score, awayTeamEndQ4Score) {
+
+            return `<tr>
+                <th>${teamName}</th>
+                <td>${findWinner(pool, homeTeamEndQ4Score + 1, awayTeamEndQ4Score)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score + 2, awayTeamEndQ4Score)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score + 3, awayTeamEndQ4Score)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score + 6, awayTeamEndQ4Score)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score + 7, awayTeamEndQ4Score)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score + 8, awayTeamEndQ4Score)}</td>
+            </tr>`;
+        }
+
+        function renderWhatIfAwayTeamRow(pool, teamName, homeTeamEndQ4Score, awayTeamEndQ4Score) {
+
+            return `<tr>
+                <th>${teamName}</th>
+                <td>${findWinner(pool, homeTeamEndQ4Score, awayTeamEndQ4Score + 1)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score, awayTeamEndQ4Score + 2)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score, awayTeamEndQ4Score + 3)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score, awayTeamEndQ4Score + 6)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score, awayTeamEndQ4Score + 7)}</td>
+                <td>${findWinner(pool, homeTeamEndQ4Score, awayTeamEndQ4Score + 8)}</td>
+            </tr>`;
         }
 
         function renderTable(homeTeam, homeTeamScores, awayTeam, awayTeamScores) {
@@ -141,7 +195,7 @@
                     ${renderTeamScoreRow(awayTeam, awayTeamScores)}
                     ${renderTeamScoreRow(homeTeam, homeTeamScores)}
                     ${renderPoolRow("1", pool1, homeTeamScores, awayTeamScores)}
-                    ${renderPoolRow("2", pool1, homeTeamScores, awayTeamScores)}
+                    ${renderPoolRow("2", pool2, homeTeamScores, awayTeamScores)}
                 </table>`;
             upd("scoreTable", sh);
         }
@@ -210,7 +264,8 @@
 
         function callApi() {
             document.getElementById("lastUpdated").innerHTML = "Last Updated: " + new Date() + " ";
-            interval = setTimeout(callApi, 5000);
+            userAction();
+            interval = setTimeout(callApi, 30000);
         }
 
     </script>
@@ -225,6 +280,10 @@
 
 <div class="row">
   <div class="col-12" id="scoreTable">TEST 3</div>
+</div>
+
+<div class="row">
+    <div class="col-12" id="whatIfTable">TEST 3</div>
 </div>
 
 <p id="lastUpdated" style="font-size:2vw; text-align: center;"></p>
