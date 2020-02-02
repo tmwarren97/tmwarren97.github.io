@@ -99,18 +99,37 @@
             background-color: #0099cc;
         }
     </style>
+
+    <script>
+        var pool1 = [
+            /* NFC - SF - AWAY 0 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 1 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 2 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 3 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 4 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 5 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 6 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 7 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 8 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary'],
+            /* NFC - SF - AWAY 9 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary']
+        ];
+    </script>
+
     <script>
         const userAction = async () => {
-            const response = await fetch('http://www.nfl.com/liveupdate/scores/scores.json', {
-                mode: 'cors',
-                headers: {
-                    "Access-Control-Allow-Origin": "*"
-                }
-            });
+            const response = await fetch('https://cors-anywhere.herokuapp.com/https://www.nfl.com/liveupdate/scores/scores.json');
             const myJson = await response.json(); //extract JSON from the http response
             console.log(myJson)
             var homeTeam = myJson["2020020200"].home;
             var awayTeam = myJson["2020020200"].away;
+            homeTeam.score["1"] = 6;
+            awayTeam.score["1"] = 0;
+            homeTeam.score["2"] = 3;
+            awayTeam.score["2"] = 14;
+            homeTeam.score["3"] = 0;
+            awayTeam.score["3"] = 10;
+            homeTeam.score["4"] = 5;
+            awayTeam.score["4"] = 2;
             var homeTeamScores = renderTeam("homeTeam", homeTeam);
             var awayTeamScores = renderTeam("awayTeam", awayTeam);
             renderTable(homeTeam, homeTeamScores, awayTeam, awayTeamScores);
@@ -131,10 +150,10 @@
             return `
                 <tr>
                     <th>Pool ${poolNumber}</th>
-                    <td>${findWinner($homeTeamScores.endQ1Score, $awayTeamScores.endQ1Score)}</td>
-                    <td>${findWinner($homeTeamScores.endQ2Score, $awayTeamScores.endQ2Score)}</td>
-                    <td>${findWinner($homeTeamScores.endQ3Score, $awayTeamScores.endQ3Score)}</td>
-                    <td>${findWinner($homeTeamScores.endQ4Score, $awayTeamScores.endQ4Score)}</td>
+                    <td>${findWinner(pool, homeTeamScores.endQ1Score, awayTeamScores.endQ1Score)}</td>
+                    <td>${findWinner(pool, homeTeamScores.endQ2Score, awayTeamScores.endQ2Score)}</td>
+                    <td>${findWinner(pool, homeTeamScores.endQ3Score, awayTeamScores.endQ3Score)}</td>
+                    <td>${findWinner(pool, homeTeamScores.endQ4Score, awayTeamScores.endQ4Score)}</td>
                 </tr>
             `;
         }
@@ -142,7 +161,7 @@
         function findWinner(pool, homeScore, awayScore) {
             var homeTeamIndex = homeScore % 10;
             var awayTeamIndex = awayScore % 10;
-            return pool[homeTeamIndex][awayTeamQ1Index];
+            return pool[homeTeamIndex][awayTeamIndex];
         }
 
         function renderTeamScoreRow(team, teamScores) {
@@ -167,7 +186,7 @@
             var endQ4Score = endQ3Score + q4Points;
             var ih = "<ul>" +
                 "<h1>" + team.abbr + "</h1>" +
-                "<h1>" + totalScore + "</h1>" +
+                "<h1>" + endQ4Score + "</h1>" +
                 "</ul>";
             upd(id, ih);
             return {
@@ -210,11 +229,7 @@
 
 <p id="lastUpdated" style="font-size:2vw; text-align: center;"></p>
 
-<script>
-    val pool1 = [
-/* NFC - SF - AWAY 0 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary']
-    ];
-</script>
+
 
 </body>
 
