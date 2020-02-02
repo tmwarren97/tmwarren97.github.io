@@ -1,0 +1,43 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>Pool Status</title>
+  <meta name="theme-color" content="#fafafa">
+
+  <script>
+    const userAction = async () => {
+      const response = await fetch('http://www.nfl.com/liveupdate/scores/scores.json');
+      const myJson = await response.json(); //extract JSON from the http response
+      console.log(myJson)
+      document.getElementById("udpate").innerHTML = myJson;
+    }
+    window.onload = function() {
+      userAction();
+    }
+
+    var interval = setTimeout(callApi, 5000);
+    function callApi() {
+      document.getElementById("lastUpdated").innerHTML = new Date() + " ";
+      interval = setTimeout(callApi, 5000);
+    }
+
+  </script>
+
+</head>
+
+<body>
+  <!--[if IE]>
+  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade
+    your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <!-- Add your site or application content here -->
+  <p id="udpate">Hello world! This is HTML5 Boilerplate.</p>
+
+  <p id="lastUpdated"></p>
+
+</body>
+
+</html>
