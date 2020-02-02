@@ -2,41 +2,219 @@
 <html class="no-js" lang="">
 
 <head>
-  <meta charset="utf-8">
-  <title>Pool Status</title>
-  <meta name="theme-color" content="#fafafa">
+    <meta charset="utf-8">
+    <title>Pool Status</title>
+    <meta name="theme-color" content="#fafafa">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-  <script>
-    const userAction = async () => {
-      const response = await fetch('http://www.nfl.com/liveupdate/scores/scores.json');
-      const myJson = await response.json(); //extract JSON from the http response
-      console.log(myJson)
-      document.getElementById("udpate").innerHTML = myJson;
-    }
-    window.onload = function() {
-      userAction();
-    }
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
 
-    var interval = setTimeout(callApi, 5000);
-    function callApi() {
-      document.getElementById("lastUpdated").innerHTML = new Date() + " ";
-      interval = setTimeout(callApi, 5000);
-    }
+        [class*="col-"] {
+            float: left;
+            padding: 15px;
+            text-align: center;
+        }
 
-  </script>
+        .col-1 {
+            width: 8.33%;
+        }
+
+        .col-2 {
+            width: 16.66%;
+        }
+
+        .col-3 {
+            width: 25%;
+        }
+
+        .col-4 {
+            width: 33.33%;
+        }
+
+        .col-5 {
+            width: 41.66%;
+        }
+
+        .col-6 {
+            width: 50%;
+        }
+
+        .col-7 {
+            width: 58.33%;
+        }
+
+        .col-8 {
+            width: 66.66%;
+        }
+
+        .col-9 {
+            width: 75%;
+        }
+
+        .col-10 {
+            width: 83.33%;
+        }
+
+        .col-11 {
+            width: 91.66%;
+        }
+
+        .col-12 {
+            width: 100%;
+        }
+
+        html {
+            font-family: "Lucida Sans", sans-serif;
+        }
+
+        .header {
+            background-color: #9933cc;
+            color: #ffffff;
+            padding: 15px;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu li {
+            padding: 8px;
+            margin-bottom: 7px;
+            background-color: #33b5e5;
+            color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+        .menu li:hover {
+            background-color: #0099cc;
+        }
+    </style>
+    <script>
+        const userAction = async () => {
+            const response = await fetch('http://www.nfl.com/liveupdate/scores/scores.json', {
+                mode: 'cors',
+                headers: {
+                    "Access-Control-Allow-Origin": "*"
+                }
+            });
+            const myJson = await response.json(); //extract JSON from the http response
+            console.log(myJson)
+            var homeTeam = myJson["2020020200"].home;
+            var awayTeam = myJson["2020020200"].away;
+            var homeTeamScores = renderTeam("homeTeam", homeTeam);
+            var awayTeamScores = renderTeam("awayTeam", awayTeam);
+            renderTable(homeTeam, homeTeamScores, awayTeam, awayTeamScores);
+        }
+
+        function renderTable(homeTeam, homeTeamScores, awayTeam, awayTeamScores) {
+            var sh = `<table style='width: 100%'>
+                    <tr><th></th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th></tr>
+                    ${renderTeamScoreRow(awayTeam, awayTeamScores)}
+                    ${renderTeamScoreRow(homeTeam, homeTeamScores)}
+                    ${renderPoolRow("1", pool1, homeTeamScores, awayTeamScores)}
+                    ${renderPoolRow("2", pool1, homeTeamScores, awayTeamScores)}
+                </table>`;
+            upd("scoreTable", sh);
+        }
+
+        function renderPoolRow(poolNumber, pool, homeTeamScores, awayTeamScores) {
+            return `
+                <tr>
+                    <th>Pool ${poolNumber}</th>
+                    <td>${findWinner($homeTeamScores.endQ1Score, $awayTeamScores.endQ1Score)}</td>
+                    <td>${findWinner($homeTeamScores.endQ2Score, $awayTeamScores.endQ2Score)}</td>
+                    <td>${findWinner($homeTeamScores.endQ3Score, $awayTeamScores.endQ3Score)}</td>
+                    <td>${findWinner($homeTeamScores.endQ4Score, $awayTeamScores.endQ4Score)}</td>
+                </tr>
+            `;
+        }
+
+        function findWinner(pool, homeScore, awayScore) {
+            var homeTeamIndex = homeScore % 10;
+            var awayTeamIndex = awayScore % 10;
+            return pool[homeTeamIndex][awayTeamQ1Index];
+        }
+
+        function renderTeamScoreRow(team, teamScores) {
+            return `<tr>
+            <th>${team.abbr}</th>
+            <td>${teamScores.endQ1Score}</td>
+            <td>${teamScores.endQ2Score}</td>
+            <td>${teamScores.endQ3Score}</td>
+            <td>${teamScores.endQ4Score}</td>
+            </tr>`;
+        }
+
+        function renderTeam(id, team) {
+            var q1Points = team.score["1"];
+            var q2Points = team.score["2"];
+            var q3Points = team.score["3"];
+            var q4Points = team.score["4"];
+            var q5Points = team.score["5"];
+            var totalScore = team.score["T"];
+            var endQ2Score = q1Points + q2Points;
+            var endQ3Score = endQ2Score + q3Points;
+            var endQ4Score = endQ3Score + q4Points;
+            var ih = "<ul>" +
+                "<h1>" + team.abbr + "</h1>" +
+                "<h1>" + totalScore + "</h1>" +
+                "</ul>";
+            upd(id, ih);
+            return {
+                totalScore: totalScore,
+                endQ1Score: q1Points,
+                endQ2Score: endQ2Score,
+                endQ3Score: endQ3Score,
+                endQ4Score: endQ4Score
+            };
+        }
+
+        function upd(id, value) {
+            document.getElementById(id).innerHTML = value;
+        }
+
+        window.onload = function () {
+            userAction();
+        }
+
+        var interval = setTimeout(callApi, 0);
+
+        function callApi() {
+            document.getElementById("lastUpdated").innerHTML = "Last Updated: " + new Date() + " ";
+            interval = setTimeout(callApi, 5000);
+        }
+
+    </script>
 
 </head>
 
 <body>
-  <!--[if IE]>
-  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade
-    your browser</a> to improve your experience and security.</p>
-  <![endif]-->
+<div class="row">
+    <div class="col-6" id="awayTeam">TEST 2</div>
+    <div class="col-6" id="homeTeam">TEST 1</div>
+</div>
 
-  <!-- Add your site or application content here -->
-  <p id="udpate">Hello world! This is HTML5 Boilerplate.</p>
+<div class="row">
+  <div class="col-12" id="scoreTable">TEST 3</div>
+</div>
 
-  <p id="lastUpdated"></p>
+<p id="lastUpdated" style="font-size:2vw; text-align: center;"></p>
+
+<script>
+    val pool1 = [
+/* NFC - SF - AWAY 0 */  ['Loiue Lites','Phil & Maria','Mike H.','Fiona','Matt Furey','Sean Austin','Catherine F.','Vanessa','Juan BMS','Mike & Mary']
+    ];
+</script>
 
 </body>
 
