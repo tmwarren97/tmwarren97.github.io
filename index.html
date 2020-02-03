@@ -118,6 +118,19 @@
             pool1[rowIndex][7] = colArray[9];
         }
 
+        function addRowToPool2(rowIndex, colArray) {
+            pool2[rowIndex][9] = colArray[0];
+            pool2[rowIndex][2] = colArray[1];
+            pool2[rowIndex][6] = colArray[2];
+            pool2[rowIndex][3] = colArray[3];
+            pool2[rowIndex][8] = colArray[4];
+            pool2[rowIndex][5] = colArray[5];
+            pool2[rowIndex][0] = colArray[6];
+            pool2[rowIndex][7] = colArray[7];
+            pool2[rowIndex][1] = colArray[8];
+            pool2[rowIndex][4] = colArray[9];
+        }
+
         addRowToPool1(8, ["Juan BMS",     "Rob Hakes", "Fiona",       "Allen Lites", "Benjamin",    "Ryan Gordan",          "Mike S",               "Louie Lites",      "Mary W.",      "Matt Furey"]);
         addRowToPool1(6, ["Catherine F.", "Haylie W.", "L.K.",        "Bill BMS",    "David M",     "Joe H.",               "Ryan Gordan (mom)",    "Ryan Gordan",      "Valerie R.",   "Mike H."]);
         addRowToPool1(7, ["Venssa",       "Scotty",    "Louie Rojo",  "L.K.",        "Ryan G.",     "Cooy",                 "Allen Lites",          "Linda BMS",        "Liz",          "Kelsie F."]);
@@ -128,6 +141,18 @@
         addRowToPool1(1, ["Phil & Maria", "Denise L.", "Mike H.",     "Regina",      "Jody",        "Rob Haker",            "Patricia F.",          "Jack Price",       "Andres T.",    "Juan F. "]);
         addRowToPool1(2, ["Mike H.",      "Sev & J.",  "Nick Fallon", "Jose Jr.",    "Emily Grove", "Steve G.",             "Jack Price",           "Susan Brandli",    "Jorge M.",     "Daniel M."]);
         addRowToPool1(4, ["Matt Furey",   "Latiff",    "Chris W.",    "Anthony J.",  "David M.",    "Jack Price",           "Mike H",               "Jose Jr.",         "Steve G.",     "Louie Lites"]);
+
+        addRowToPool2(2, ["Juan BMS",       "Valerie R.",           "Ryan G.",          "Kathy N.",     "Ryan G.",      "Joe H",          "Joe H",              "Jody",         "Mary W.",      "Matt Furey"]);
+        addRowToPool2(1, ["Catherine F.",   "Haylie W.",            "L.K.",             "Fiona",        "Fiona",        "Joe H",          "Ryan Gordan (mom)",  "Kathy N.",     "Scotty",       "David M."]);
+        addRowToPool2(9, ["DValen",         "Scotty",               "Louie Rojo",       "L.K.",         "Fiona",        "Eddie M.",       "Fiona",              "Vanessa",      "Liz",          "Bridget"]);
+        addRowToPool2(3, ["David M.",       "Fiona",                "John Shea",        "Louie Rojo",   "L.K.",         "Louie Lites",    "Alex M",             "Cody",         "Danise",       "Latiff"]);
+        addRowToPool2(7, ["Mike & Mary",    "Kathy & Ann Marie",    "Regina",           "Anthony J.",   "Louis Rojo",   "L.K.",           "Linda BMS",          "Jose Jr",      "Rob Haker",    "Sean F."]);
+        addRowToPool2(6, ["Sean Austin",    "EF",                   "Bill BMS",         "Alex M.",      "Juan F",       "Louie Rojo",     "L.K.",               "Aidan W.",     "EF BMS",       "John S."]);
+        addRowToPool2(0, ["Miils D.",       "Nore BMS",             "Ryan Gordan (dad)","Armand BMS",   "Tim W.",       "Fiona",          "Louie Rojo",         "Anthony J.",   "Vanessa ",     "Mike & Mary"]);
+        addRowToPool2(4, ["Phil & Maria",   "Benjamis Sm.",         "Davon",            "Linda BMS",    "Denise L.",    "Pat Fuller",     "Sean Fallon",        "Mike H",       "Ragina",       "Ryan G."]);
+        addRowToPool2(8, ["Rob Hakes",      "Sev & J.",             "Anthony J.",       "Joe H",        "Mike H",       "Milas D.",       "Davon",              "Louie Lites",  "Jorge M.",     "Mike H."]);
+        addRowToPool2(5, ["Matt Furey",     "Latiff",               "Chris W.",         "Jose Jr.",     "Mike H",       "Bill B.",        "Mike H",             "NDRU BMS",     "Cody",         "Juan F."]);
+
 
     </script>
 
@@ -152,6 +177,7 @@
             var awayTeamScores = renderTeam("awayTeam", awayTeam);
             renderTable(homeTeam, homeTeamScores, awayTeam, awayTeamScores);
             renderWhatIfs(pool1, homeTeam.abbr, homeTeamScores.endQ4Score, awayTeam.abbr, awayTeamScores.endQ4Score, 1);
+            renderWhatIfs(pool2, homeTeam.abbr, homeTeamScores.endQ4Score, awayTeam.abbr, awayTeamScores.endQ4Score, 2);
         }
 
         function renderWhatIfs(pool, homeTeamName, homeTeamEndQ4Score, awayTeamName, awayTeamEndQ4Score, poolId) {
@@ -160,7 +186,7 @@
             ${renderWhatIfAwayTeamRow(pool, awayTeamName, homeTeamEndQ4Score, awayTeamEndQ4Score)}
             ${renderWhatIfHomeTeamRow(pool, homeTeamName, homeTeamEndQ4Score, awayTeamEndQ4Score)}
             </table>`;
-            upd("whatIfTable", wih);
+            upd("whatIfTable" + poolId, wih);
         }
 
         function renderWhatIfHomeTeamRow(pool, teamName, homeTeamEndQ4Score, awayTeamEndQ4Score) {
@@ -283,7 +309,11 @@
 </div>
 
 <div class="row">
-    <div class="col-12" id="whatIfTable">TEST 3</div>
+    <div class="col-12" id="whatIfTable1">TEST 3</div>
+</div>
+
+<div class="row">
+    <div class="col-12" id="whatIfTable2">TEST 3</div>
 </div>
 
 <p id="lastUpdated" style="font-size:2vw; text-align: center;"></p>
